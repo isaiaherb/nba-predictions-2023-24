@@ -7,4 +7,4 @@ Requirements:
 ![Graph2](https://github.com/isaiaherb/nba-predictions-2023-24/blob/main/images/Screenshot%202024-06-28%20111733.png?raw=true)
 ## Linear Model Outputs
 ![Graph3](https://github.com/isaiaherb/nba-predictions-2023-24/blob/main/images/Screenshot%202024-06-28%20111907.png?raw=true)
-![Graph4]
+![Graph4](https://github.com/isaiaherb/nba-predictions-2023-24/blob/main/images/Screenshot%202024-06-28%20111925.png?raw=true)
