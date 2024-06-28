@@ -1,0 +1,34 @@
+---
+title: "NBA Finals"
+output: word_document
+date: "2023-06-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(rvest)
+library(readxl)
+```
+
+```{r}
+file_path <- "C:\\Users\\Isaiah Erb\\Documents\\Work Portfolio\\NBA Finals\\NBA Finals Box Score Data.xlsx"
+nuggets_data <- read_excel(file_path, sheet = "Nuggets Game 1")
+heat_data <- read_excel(file_path, sheet = "Heat Game 1")
+```
+
+```{r}
+nuggets_data %>% 
+  mutate(FGP = FGM / FGA)
+```
+
+```{r}
+ggplot(data = nuggets_data)  + 
+  ge(aes(x = PTS, y = PTS)) +
+  labs(title = "Points by Player")
+```
+
+

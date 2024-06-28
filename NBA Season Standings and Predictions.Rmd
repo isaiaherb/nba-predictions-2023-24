@@ -1,0 +1,96 @@
+---
+title: "NBA Season Rankings and Predictions"
+output: word_document
+date: "2023-06-10"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(rvest)
+library(readxl)
+```
+
+The purpose of this project is to provide a comprehensive list of the team standings based on key statistics from the NBA website. Based on these stats, we'd like to predict what the standings will be next season using machine learning. 
+
+
+
+```{r}
+data <- read_excel("NBA Standings Data.xlsx")
+```
+
+```{r}
+sorted_df <- arrange(data, desc(W))
+sorted_df
+```
+
+```{r}
+ggplot(data = sorted_df) +
+  geom_col(aes(x = WINPERCENT, y = Team))
+```
+The Boston Celtics had the highest percentage of wins during the 2022-23 regular season, with the Pistons in the lowest spot. 
+
+```{r}
+data <- sorted_df %>% 
+  select(WINPERCENT, PTS, FGPERCENT, THREEPPERCENT, FTPERCENT, OREB, DREB, REB, AST, TOV, STL, BLK, PF, PFD)
+
+data
+```
+
+```{r}
+model <- lm(WINPERCENT ~ PTS + FGPERCENT + THREEPPERCENT + FTPERCENT + OREB + DREB + REB + AST + TOV + STL + BLK + PF + PFD, data = data)
+
+summary(model)
+```
+According to the model, the best predictors of win % are 3P%, TOV, STL, and PF. This doesn't entirely make sense according to the hypothesis that PTS, Field Goals, and Assists/Rebounds would be the most significant indicators. But given that these are all variables that vary by team, it's logical that they wouldn't be the best predictors given a linear model.
+
+```{r}
+predictions <- predict(model)
+```
+
+
+```{r}
+actual <- data$WINPERCENT
+predicted <- predictions
+differences <- actual - predicted
+team <- sorted_df$Team
+```
+
+
+```{r}
+results <- tibble(team = team, acutal = actual, predicted = predicted, difference = differences)
+results
+```
+
+```{r}
+ggplot(results, aes(x = 1:length(actual))) +
+  geom_line(aes(y = actual, color = "Actual")) +
+  geom_line(aes(y = predicted, color = "Predicted")) +
+  labs(x = "Index", y = "Values", color = "Line") +
+  scale_color_manual(values = c("Actual" = "blue", "Predicted" = "red")) +
+  theme_minimal()
+```
+
+
+```{r}
+predictions <- arrange(results, desc(predicted)) %>% 
+  mutate(teamabr = c("BOS", "MIL","DEN","PHI","LAC","MEM","SAC","PHX","CLE","CHI","NOP","LAL","ATL","OKC","NYK","GSW","WAS",
+                     "BKN","TOR","DAL","IND","MIN","POR","MIA","UTA","ORL","CHA","SAS","HOU","DET"))
+predictions 
+```
+
+```{r}
+data <- arrange(predictions, desc(actual))
+
+# Plot the bar chart using ggplot2
+plot <- ggplot(data, aes(y = teamabr)) +
+  geom_bar(aes(x = actual, fill = "Actual"), stat = "identity", position = "dodge") +
+  geom_bar(aes(x = predicted, fill = "Predicted"), stat = "identity", position = "dodge") +
+  geom_bar(aes(x = difference, fill = "Difference"), stat = "identity", position = "dodge") +
+  labs(title = "Multiple Bars in Each Column", x = "Team", y = "Values") +
+  scale_fill_manual(values = c("Actual" = "red", "Predicted" = "blue", "Difference" = "orange")) +
+  theme_bw()
+
+plot
+
+```
+
