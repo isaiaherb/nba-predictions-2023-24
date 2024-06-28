@@ -1,4 +1,4 @@
-# NBA Season Rankings and 2023-24 Season Predictions
+# NBA Season Rankings and 2023-24 Season Predictions in R
 Description: This repository includes historic NBA data and R code to run a linear model and predict the outcome of the 2023-24 season.
 
 ## 2023-24 Predictions
